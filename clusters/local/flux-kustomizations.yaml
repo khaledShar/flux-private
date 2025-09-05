@@ -5,6 +5,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
   path: ./infra/namespaces
   prune: true
   wait: true
@@ -16,6 +19,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
   path: ./infra/vault
   prune: true
   dependsOn:
@@ -29,6 +35,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
   path: ./apps/keycloak
   prune: true
   dependsOn:
@@ -42,6 +51,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
   path: ./apps/grafana
   prune: true
   dependsOn:
