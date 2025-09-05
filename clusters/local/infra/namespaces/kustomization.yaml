@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - 00-namespace-vault.yaml
-  - 01-namespace-keycloak.yaml
-  - 02-namespace-grafana.yaml
-  - 03-namespace-external-secrets.yaml
+  - vault.yaml
+  - keycloak.yaml
+  - grafana.yaml
+  - external-secrets.yaml
