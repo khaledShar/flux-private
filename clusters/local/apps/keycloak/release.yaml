@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: keycloak
-      version: ">=25.0.0 <26.0.0"
+      version: 25.x.x
       sourceRef:
         kind: HelmRepository
         name: bitnami-oci
