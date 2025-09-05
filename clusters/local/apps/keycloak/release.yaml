@@ -21,8 +21,40 @@ spec:
       retries: 3
   values:
     auth:
-      adminUser: admin
-      existingSecret: keycloak-admin
+      existingSecret: external-secrets/keycloak-admin # holt admin-user/pass aus K8s-Secret
       passwordSecretKey: admin-password
-    service:
-      type: ClusterIP
+      usernameSecretKey: admin-user
+
+  keycloakConfigCli:
+    enabled: true
+    # wir benutzen Variablenersetzung aus ENV (Secret 'grafana-oidc'):
+    extraEnvVars:
+      - name: IMPORT_VAR_SUBSTITUTION_ENABLED
+        value: "true"
+    extraEnvVarsSecret: external-secrets/grafana-oidc
+    # Realm/Client deklarativ anlegen:
+    configuration:
+      realm-dev.yaml: |
+        realm: dev
+        enabled: true
+        registrationAllowed: false
+        loginWithEmailAllowed: true
+        sslRequired: NONE
+        clients:
+          - clientId: ${GRAFANA_CLIENT_ID}
+            name: Grafana
+            enabled: true
+            protocol: openid-connect
+            publicClient: false
+            secret: ${GRAFANA_CLIENT_SECRET}
+            standardFlowEnabled: true
+            directAccessGrantsEnabled: false
+            redirectUris:
+              - "http://grafana.local/*"
+            baseUrl: "http://grafana.local"
+            rootUrl: "http://grafana.local"
+            attributes:
+              access.token.lifespan: "3600"
+        groups:
+          - name: grafana-admin
+          - name: grafana-editor
