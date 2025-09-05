@@ -21,9 +21,6 @@ spec:
     passwordSecretKey: admin-password
     usernameSecretKey: admin-user
 
-  postgresql:
-    enabled: true # eingebettetes Postgres für lokal
-
   ingress:
     enabled: true
     hostname: keycloak.local
