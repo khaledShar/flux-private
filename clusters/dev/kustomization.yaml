@@ -1,7 +1,14 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
-namespace: flux-system
-resources:
-  - ../../apps/kustomization/
-patches:
-  - path: cluster-patch.yaml
+metadata:
+  name: infra
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./apps
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
