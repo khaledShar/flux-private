@@ -16,19 +16,10 @@ spec:
         name: bitnami-oci
         namespace: flux-system
   values:
-  auth:
-    existingSecret: external-secrets/keycloak-admin # holt admin-user/pass aus K8s-Secret
-    passwordSecretKey: admin-password
-    usernameSecretKey: admin-user
-
-  ingress:
-    enabled: true
-    hostname: keycloak.local
-    ingressClassName: traefik
-    tls: false
-    path: /
-
-  proxy: edge # wichtig bei Ingress/TLS-Offload
+    auth:
+      existingSecret: external-secrets/keycloak-admin # holt admin-user/pass aus K8s-Secret
+      passwordSecretKey: admin-password
+      usernameSecretKey: admin-user
 
   keycloakConfigCli:
     enabled: true
