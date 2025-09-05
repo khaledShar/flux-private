@@ -5,6 +5,8 @@ metadata:
   namespace: keycloak
 spec:
   interval: 10m
+  install:
+    createNamespace: true
   chart:
     spec:
       chart: keycloak
@@ -13,16 +15,54 @@ spec:
         kind: HelmRepository
         name: bitnami-oci
         namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
   values:
-    auth:
-      adminUser: admin
-      existingSecret: keycloak-admin
-      passwordSecretKey: admin-password
-    service:
-      type: ClusterIP
+  auth:
+    existingSecret: external-secrets/keycloak-admin # holt admin-user/pass aus K8s-Secret
+    passwordSecretKey: admin-password
+    usernameSecretKey: admin-user
+
+  postgresql:
+    enabled: true # eingebettetes Postgres für lokal
+
+  ingress:
+    enabled: true
+    hostname: keycloak.local
+    ingressClassName: traefik
+    tls: false
+    path: /
+
+  proxy: edge # wichtig bei Ingress/TLS-Offload
+
+  keycloakConfigCli:
+    enabled: true
+    # wir benutzen Variablenersetzung aus ENV (Secret 'grafana-oidc'):
+    extraEnvVars:
+      - name: IMPORT_VAR_SUBSTITUTION_ENABLED
+        value: "true"
+    extraEnvVarsSecret: external-secrets/grafana-oidc
+    # Realm/Client deklarativ anlegen:
+    configuration:
+      realm-dev.yaml: |
+        realm: dev
+        enabled: true
+        registrationAllowed: false
+        loginWithEmailAllowed: true
+        sslRequired: NONE
+        clients:
+          - clientId: ${GRAFANA_CLIENT_ID}
+            name: Grafana
+            enabled: true
+            protocol: openid-connect
+            publicClient: false
+            secret: ${GRAFANA_CLIENT_SECRET}
+            standardFlowEnabled: true
+            directAccessGrantsEnabled: false
+            redirectUris:
+              - "http://grafana.local/*"
+            baseUrl: "http://grafana.local"
+            rootUrl: "http://grafana.local"
+            attributes:
+              access.token.lifespan: "3600"
+        groups:
+          - name: grafana-admin
+          - name: grafana-editor
