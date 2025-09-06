@@ -4,3 +4,4 @@ resources:
   - helmrelease-vault.yaml
   - helmrelease-external-secrets.yaml
   - repo.yaml
+  - clustersecretstore.yaml
