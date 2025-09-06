@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - repo.yaml
   - helmrelease-keycloak.yaml
+  - external-secret-keycloak-admin.yaml
